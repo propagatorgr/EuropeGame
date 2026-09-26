@@ -1,0 +1,18 @@
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+}
+
+h1{
+    text-align:center;
+}
+
+#info{
+    text-align:center;
+    font-size:22px;
+    margin:10px;
+}
+
+#map{
+    height:85vh;
+}
