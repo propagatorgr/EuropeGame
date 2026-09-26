@@ -4,17 +4,13 @@ let score = 0;
 let correct = 0;
 let wrong = 0;
 
-let countries = [];
+let currentCountry = null;
 let remainingCountries = [];
 
-let currentCountry = null;
-
 function updateStats() {
-
     document.getElementById("score").textContent = score;
     document.getElementById("correct").textContent = correct;
     document.getElementById("wrong").textContent = wrong;
-
 }
 
 function nextCountry() {
@@ -22,136 +18,129 @@ function nextCountry() {
     if (remainingCountries.length === 0) {
 
         document.getElementById("targetCountry").textContent =
-            "ΟΛΟΚΛΗΡΩΘΗΚΕ";
+            "ΤΕΛΟΣ ΠΑΙΧΝΙΔΙΟΥ";
 
         alert(
-            "Το παιχνίδι ολοκληρώθηκε!\n\n" +
+            "Παιχνίδι ολοκληρώθηκε!\n\n" +
             "Σκορ: " + score +
             "\nΣωστές: " + correct +
             "\nΛάθη: " + wrong
         );
 
+        currentCountry = null;
         return;
     }
 
-    const randomIndex =
-        Math.floor(
-            Math.random() * remainingCountries.length
-        );
+    const randomIndex = Math.floor(
+        Math.random() * remainingCountries.length
+    );
 
-    currentCountry =
-        remainingCountries[randomIndex];
+    currentCountry = remainingCountries[randomIndex];
 
     document.getElementById("targetCountry").textContent =
         currentCountry;
 }
 
 fetch("europe.geojson")
+    .then(response => response.json())
+    .then(data => {
 
-.then(response => response.json())
+        const countryLayer = L.geoJSON(data, {
 
-.then(data => {
+            style: {
+                color: "#333",
+                weight: 1,
+                fillColor: "#4a90e2",
+                fillOpacity: 0.7
+            },
 
-    countries = data.features.map(
-        feature => feature.properties.NAME
-    );
+            onEachFeature: function (feature, layer) {
 
-    remainingCountries = [...countries];
+                const countryName =
+                    feature.properties.NAME ||
+                    feature.properties.ADMIN;
 
-    const geoLayer = L.geoJSON(data, {
-
-        style: {
-            color: "#333",
-            weight: 1,
-            fillColor: "#4a90e2",
-            fillOpacity: 0.7
-        },
-
-        onEachFeature: function(feature, layer) {
-
-            layer.on("mouseover", function() {
-
-                if (layer.options.fillColor !== "green") {
-
-                    layer.setStyle({
-                        weight: 3
-                    });
-
+                if (countryName) {
+                    remainingCountries.push(countryName);
                 }
 
-            });
+                layer.on("mouseover", function () {
 
-            layer.on("mouseout", function() {
+                    if (layer.options.fillColor !== "green") {
 
-                layer.setStyle({
-                    weight: 1
+                        layer.setStyle({
+                            weight: 3
+                        });
+
+                    }
+
                 });
 
-            });
-
-            layer.on("click", function() {
-
-                if (!currentCountry) return;
-
-                const clickedCountry =
-                    feature.properties.NAME;
-
-                if (clickedCountry === currentCountry) {
-
-                    score += 10;
-                    correct++;
+                layer.on("mouseout", function () {
 
                     layer.setStyle({
-                        fillColor: "green",
-                        fillOpacity: 0.8
+                        weight: 1
                     });
 
-                    remainingCountries =
-                        remainingCountries.filter(
-                            country => country !== currentCountry
-                        );
+                });
 
-                    updateStats();
+                layer.on("click", function () {
 
-                    nextCountry();
+                    if (!currentCountry) return;
 
-                } else {
+                    if (countryName === currentCountry) {
 
-                    score -= 2;
-                    wrong++;
+                        score += 10;
+                        correct++;
 
-                    updateStats();
+                        layer.setStyle({
+                            fillColor: "green",
+                            fillOpacity: 0.8
+                        });
 
-                    layer.setStyle({
-                        fillColor: "red"
-                    });
+                        remainingCountries =
+                            remainingCountries.filter(
+                                c => c !== currentCountry
+                            );
 
-                    setTimeout(() => {
+                        updateStats();
 
-                        if (
-                            layer.options.fillColor !== "green"
-                        ) {
+                        nextCountry();
 
-                            layer.setStyle({
-                                fillColor: "#4a90e2"
-                            });
+                    } else {
 
-                        }
+                        score -= 2;
+                        wrong++;
 
-                    }, 500);
+                        updateStats();
 
-                }
+                        layer.setStyle({
+                            fillColor: "red"
+                        });
 
-            });
+                        setTimeout(() => {
 
-        }
+                            if (
+                                layer.options.fillColor !== "green"
+                            ) {
 
-    }).addTo(map);
+                                layer.setStyle({
+                                    fillColor: "#4a90e2"
+                                });
 
-    map.fitBounds(
-        geoLayer.getBounds()
-    );
+                            }
 
-    nextCountry();
+                        }, 500);
 
-});
+                    }
+
+                });
+
+            }
+
+        }).addTo(map);
+
+        map.fitBounds(countryLayer.getBounds());
+
+        nextCountry();
+    });
