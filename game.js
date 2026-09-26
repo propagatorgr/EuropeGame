@@ -1,11 +1,18 @@
-const map = L.map('map');
-
+const map = L.map('map').setView([54, 15], 4);
+ 
+L.tileLayer(
+'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+{
+attribution: '&copy; OpenStreetMap contributors'
+}
+).addTo(map);
+ 
 let score = 0;
 let correct = 0;
 let wrong = 0;
-
 let currentCountry = null;
 let remainingCountries = [];
+
 
 function updateStats() {
     document.getElementById("score").textContent = score;
