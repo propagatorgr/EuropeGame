@@ -1,31 +1,41 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Europe Geography Challenge</title>
+<title>Europe Geography Challenge</title>
 
-    <link
-        rel="stylesheet"
-        hreft.css
+<link
+    rel="om/leaflet@1.9.4/dist/leaflet.css
 
-    style.css
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <h1>Europe Geography Challenge</h1>
+<h1>Europe Geography Challenge</h1>
 
-    <div id="info">
-        Πάτησε σε μια χώρα
-    </div>
+<div id="info">
+    Βρες τη χώρα:
+    <strong id="targetCountry">...</strong>
+</div>
 
-    <div id="map"></div>
+<div id="stats">
+    Σκορ:
+    <span id="score">0</span>
+    |
+    Σωστές:
+    <span id="correct">0</span>
+    |
+    Λάθη:
+    <span id="wrong">0</span>
+</div>
 
-    https://unpkg.com/leaflet@1.9.4/dist/leaflet.jsscript>
+<div id="map"></div>
 
-    <script src="game.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="game.js"></script>
 
 </body>
 </html>
