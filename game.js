@@ -1,4 +1,4 @@
-const map = L.map('map').setView([54, 15], 4);
+const map = L.map('map').setView([54, 15], 8);
  
 L.tileLayer(
 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -148,6 +148,6 @@ fetch("europe.geojson")
         }).addTo(map);
 
         map.fitBounds(countryLayer.getBounds());
-        map.setView([54, 15], 4);
+        map.setView([54, 15], 8);
         nextCountry();
     });
