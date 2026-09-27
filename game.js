@@ -1,23 +1,55 @@
-const map = L.map('map').setView([55, 20], 4);
- 
+const map = L.map('map').setView([54, 15], 4);
+
 L.tileLayer(
-'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-{
-attribution: '&copy; OpenStreetMap contributors'
-}
+    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+        attribution: '&copy; OpenStreetMap contributors'
+    }
 ).addTo(map);
- 
+
 let score = 0;
 let correct = 0;
 let wrong = 0;
-let currentCountry = null;
-let remainingCountries = [];
 
+let currentCountry = null;
+
+let remainingCountries = [];
+let allCountries = [];
+
+let countryLayer;
+
+let highScore =
+    Number(localStorage.getItem("highScore")) || 0;
+
+document.getElementById("highScore").textContent =
+    highScore;
 
 function updateStats() {
-    document.getElementById("score").textContent = score;
-    document.getElementById("correct").textContent = correct;
-    document.getElementById("wrong").textContent = wrong;
+
+    document.getElementById("score").textContent =
+        score;
+
+    document.getElementById("correct").textContent =
+        correct;
+
+    document.getElementById("wrong").textContent =
+        wrong;
+
+    document.getElementById("remainingCount").textContent =
+        remainingCountries.length;
+
+    if (score > highScore) {
+
+        highScore = score;
+
+        localStorage.setItem(
+            "highScore",
+            highScore
+        );
+
+        document.getElementById("highScore").textContent =
+            highScore;
+    }
 }
 
 function nextCountry() {
@@ -35,24 +67,50 @@ function nextCountry() {
         );
 
         currentCountry = null;
+
         return;
     }
 
-    const randomIndex = Math.floor(
-        Math.random() * remainingCountries.length
-    );
+    const randomIndex =
+        Math.floor(
+            Math.random() * remainingCountries.length
+        );
 
-    currentCountry = remainingCountries[randomIndex];
+    currentCountry =
+        remainingCountries[randomIndex];
 
     document.getElementById("targetCountry").textContent =
         currentCountry;
+}
+
+function newGame() {
+
+    score = 0;
+    correct = 0;
+    wrong = 0;
+
+    remainingCountries = [...allCountries];
+
+    countryLayer.eachLayer(layer => {
+
+        layer.setStyle({
+            fillColor: "#4a90e2",
+            fillOpacity: 0.7,
+            weight: 1
+        });
+
+    });
+
+    updateStats();
+
+    nextCountry();
 }
 
 fetch("europe.geojson")
     .then(response => response.json())
     .then(data => {
 
-        const countryLayer = L.geoJSON(data, {
+        countryLayer = L.geoJSON(data, {
 
             style: {
                 color: "#333",
@@ -61,19 +119,23 @@ fetch("europe.geojson")
                 fillOpacity: 0.7
             },
 
-            onEachFeature: function (feature, layer) {
+            onEachFeature: function(feature, layer) {
 
                 const countryName =
                     feature.properties.NAME ||
                     feature.properties.ADMIN;
 
                 if (countryName) {
+
                     remainingCountries.push(countryName);
+                    allCountries.push(countryName);
                 }
 
-                layer.on("mouseover", function () {
+                layer.on("mouseover", function() {
 
-                    if (layer.options.fillColor !== "green") {
+                    if (
+                        layer.options.fillColor !== "green"
+                    ) {
 
                         layer.setStyle({
                             weight: 3
@@ -83,7 +145,7 @@ fetch("europe.geojson")
 
                 });
 
-                layer.on("mouseout", function () {
+                layer.on("mouseout", function() {
 
                     layer.setStyle({
                         weight: 1
@@ -91,7 +153,7 @@ fetch("europe.geojson")
 
                 });
 
-                layer.on("click", function () {
+                layer.on("click", function() {
 
                     if (!currentCountry) return;
 
@@ -111,7 +173,6 @@ fetch("europe.geojson")
                             );
 
                         updateStats();
-
                         nextCountry();
 
                     } else {
@@ -147,7 +208,18 @@ fetch("europe.geojson")
 
         }).addTo(map);
 
-        map.fitBounds(countryLayer.getBounds());
-        map.setView([55, 20], 4);
+        map.fitBounds(
+            countryLayer.getBounds()
+        );
+
+        updateStats();
         nextCountry();
+
     });
+
+document
+    .getElementById("newGameBtn")
+    .addEventListener(
+        "click",
+        newGame
+    );
