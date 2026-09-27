@@ -1,41 +1,58 @@
 <!DOCTYPE html>
 <html lang="el">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Europe Geography Challenge</title>
 
-    <link rel="stylesheet"
-         href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <link rel="stylesheet" href="style.css">
+   <link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+ 
+<link rel="stylesheet"
+href="style.css">
 </head>
+
 <body>
 
-<h1>Europe Geography Challenge</h1>
+    <h1>Europe Geography Challenge</h1>
 
-<div id="info">
-    Βρες τη χώρα:
-    <strong id="targetCountry">...</strong>
-</div>
+    <div id="info">
+        Βρες τη χώρα:
+        <strong id="targetCountry">...</strong>
+    </div>
 
-<div id="stats">
-    Σκορ:
-    <span id="score">0</span>
-    |
-    Σωστές:
-    <span id="correct">0</span>
-    |
-    Λάθη:
-    <span id="wrong">0</span>
-</div>
+    <div id="stats">
+        Σκορ:
+        <span id="score">0</span>
+        |
+        Σωστές:
+        <span id="correct">0</span>
+        |
+        Λάθη:
+        <span id="wrong">0</span>
+    </div>
 
-<div id="map">
-   
-</div>
+    <div id="remaining">
+        Απομένουν:
+        <span id="remainingCount">0</span>
+    </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="game.js"></script>
+    <div id="highscore">
+        High Score:
+        <span id="highScore">0</span>
+    </div>
+
+    <div id="controls">
+        <button id="newGameBtn">Νέο Παιχνίδι</button>
+    </div>
+
+    <div id="map"></div>
+
+     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.jsscript>
+    <script src="game.js"></script>
 
 </body>
+
 </html>
