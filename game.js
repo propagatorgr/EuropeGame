@@ -148,6 +148,6 @@ fetch("europe.geojson")
         }).addTo(map);
 
         map.fitBounds(countryLayer.getBounds());
-
+        map.setView([54, 15], 4);
         nextCountry();
     });
