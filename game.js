@@ -122,6 +122,7 @@ fetch("europe.geojson")
             onEachFeature: function(feature, layer) {
 
                 const countryName =
+                    feature.properties.NAME_EL ||
                     feature.properties.NAME ||
                     feature.properties.ADMIN;
 
